@@ -1,50 +1,73 @@
 import React, { useState } from 'react';
 import { Form, Label, Input, Button } from './ContactForm.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectorContacts } from 'redux/selector';
+import { addContact } from 'redux/contactSlice';
+import { nanoid } from '@reduxjs/toolkit';
 
-export const ContactForm = ({ onContactSubmit }) => {
+const ContactForm = () => {
+  const contacts = useSelector(selectorContacts);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
 
-  const handleChange = ev => {
-    const { name, value } = ev.target;
+  const handleInputChange = event => {
+    const { name, value } = event.target;
     if (name === 'name') {
       setName(value);
     } else if (name === 'number') {
       setNumber(value);
     }
   };
-  const handleSubmit = e => {
-    e.preventDefault();
 
-    onContactSubmit({ name, number });
-    setName('');
-    setNumber('');
+  const handleAddNewContact = formData => {
+    const isNameExist = contacts.some(
+      contact => contact.name.toLowerCase() === formData.name.toLowerCase()
+    );
+
+    if (isNameExist) {
+      alert(`${formData.name} is already in contacts.`);
+    } else {
+      const newContact = {
+        id: nanoid(),
+        ...formData,
+      };
+      dispatch(addContact(newContact));
+      setName('');
+      setNumber('');
+    }
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    handleAddNewContact({ name, number });
   };
 
   return (
     <div>
       <Form onSubmit={handleSubmit}>
         <Label>
-          Name
+          <span>Name</span>
           <Input
-            type="text"
-            name="name"
-            required
+            onChange={handleInputChange}
             value={name}
-            onChange={handleChange}
+            name="name"
+            type="text"
+            required
             pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             placeholder="Enter contact name"
           />
-        </Label>
-        <Label>
-          Number
+          <span>Number</span>
           <Input
+            onChange={handleInputChange}
+            value={number}
             type="tel"
             name="number"
             required
-            value={number}
-            onChange={handleChange}
             pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
+            placeholder="Number"
+            minLength="7"
+            maxLength="12"
           />
         </Label>
         <Button type="submit">Add contact</Button>
@@ -52,3 +75,5 @@ export const ContactForm = ({ onContactSubmit }) => {
     </div>
   );
 };
+
+export default ContactForm;
