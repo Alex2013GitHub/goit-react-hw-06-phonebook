@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Label, Input } from './Filter.styled';
+// import { Label, Input } from './Filter.styled';
 import { selectorFilter } from 'redux/selector';
 import { addFilter } from 'redux/filterSlice';
 
@@ -13,10 +13,10 @@ const Filter = () => {
   };
 
   return (
-    <Label>
+    <label>
       <p>Find contacts by name</p>
       <form>
-        <Input
+        <input
           type="text"
           placeholder="Search contacts"
           value={filter}
@@ -29,7 +29,7 @@ const Filter = () => {
           }}
         />
       </form>
-    </Label>
+    </label>
   );
 };
 

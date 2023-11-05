@@ -14,9 +14,6 @@ export const ListItem = styled.li`
   border-radius: 4px;
   margin-top: 10px;
   width: 500px;
-`;
-
-export const ContactInfo = styled.span`
   flex-grow: 1;
   margin-right: 10px;
 `;
